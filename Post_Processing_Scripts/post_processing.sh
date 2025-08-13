@@ -33,7 +33,7 @@ if [ ! -d "$BASE_DIR" ]; then
     usage
 fi
 
-# Check if work directory exists
+# Check if json directory exists
 if [ ! -d "$BASE_DIR/$jp" ]; then
     echo "Error: Json directory '$BASE_DIR/$jp' does not exist or is not accessible"
     usage
@@ -69,7 +69,7 @@ if [ -z "$(ls -A "$OUTPUT_DIR")" ]; then
     
     log "Submitted split job for ${wp} (Job ID: ${JOB_ID})"
 else
-    log "Output directory ${OUTPUT_DIR} is not empty. Skipping split job for ${wp}."
+    log "Output directory ${OUTPUT_DIR} is not empty. Skipping split job."
 fi
 
 log "Post processing completed"
