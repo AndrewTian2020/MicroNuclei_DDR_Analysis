@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 # Post Processing Scripts for Micronuclei ML Pipeline
-# July 9, 2025
+# Aug 10, 2025
 # Author: Andrew Tian
 #
 # This script takes the .json outputs from the ML pipeline and
@@ -24,7 +24,7 @@ fi
 
 # Define the base directories
 BASE_DIR="$1"
-# Define the work directory, which is a subdirectory of the base directory
+# Define the json directory, which is a subfolder of the base directory containing .json files
 jp="$2"
 
 # Check if base directory exists
@@ -49,29 +49,27 @@ log() {
     echo "$(date +"%Y-%m-%d %H:%M:%S") - $1" | tee -a $LOG_FILE
 }
 
-# Function to wait for jobs to complete
-wait_for_jobs() {
-    local job_ids=("$@")
-    log "Waiting for ${#job_ids[@]} jobs to complete..."
-    
-    # Wait for all jobs to complete
-    for job_id in "${job_ids[@]}"; do
-        while squeue -j "$job_id" | grep -q "$job_id"; do
-            log "Job $job_id is still running. Waiting..."
-            sleep 60  # Check every minute
-        done
-        log "Job $job_id has completed."
-    done
-    
-    log "All jobs have completed."
-}
-
 log "Starting Post Processing Pipeline"
 log "======================================="
 
-# Write Excel sheet containing all the .jsons
-log ""
-log "---------------------------------------------------"
-# Array to store job IDs
-split_job_ids=()
+INPUT_DIR="${BASE_DIR}/${jp}"
+OUTPUT_DIR="${BASE_DIR}/${jp}-excels"
 
+log "Processing ${jp} for splitting"
+log "Input directory: ${INPUT_DIR}"
+log "Output directory: ${OUTPUT_DIR}"
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+# Check if output directory is empty
+if [ -z "$(ls -A "$OUTPUT_DIR")" ]; then
+    # Submit the splitting job
+    JOB_ID=$(sbatch excel_writer.sh "$INPUT_DIR" "$OUTPUT_DIR")
+    
+    log "Submitted split job for ${wp} (Job ID: ${JOB_ID})"
+else
+    log "Output directory ${OUTPUT_DIR} is not empty. Skipping split job for ${wp}."
+fi
+
+log "Post processing completed"
