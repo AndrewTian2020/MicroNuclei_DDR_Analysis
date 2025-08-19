@@ -303,7 +303,8 @@ def get_parent_maps(path_to_json):
         temp_list = get_float_list(item)
         int_list = []
         for num in temp_list:
-            int_list.append(int(num))
+            if int(num) >= 0:
+                int_list.append(int(num))
         parent_list.append(int_list)
 
     return(parent_list)
@@ -328,9 +329,10 @@ def get_parent_distances(path_to_json):
 
     for map in parent_map:
         temp_dist = []
-        n = parent_map.index(map)
+        #n = parent_map.index(map)
+        m = 0
         for i in map:
-            m = map.index(i)
+            #m = map.index(i)
 
             x1 = nuclei_centers[n][i][0]
             y1 = nuclei_centers[n][i][1]
@@ -340,7 +342,9 @@ def get_parent_distances(path_to_json):
 
             d = np.sqrt((x1 - x2)**2 + (y1 - y2)**2)
             temp_dist.append(d)
+            m += 1
         file_dist.append(temp_dist)
+        n += 1
     return(file_dist)
 
 # jsonFile class stores all the processed information about
