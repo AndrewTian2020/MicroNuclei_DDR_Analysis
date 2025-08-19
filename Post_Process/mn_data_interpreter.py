@@ -348,7 +348,6 @@ def get_parent_distances(path_to_json):
 class jsonFile:
     # Initialize variables
     def __init__(self, path_to_json):
-        self.raw_text = read_text(path_to_json)
         self.image_ids = get_image_ids(path_to_json)
         self.nuclei_counts = get_nuclei_counts(path_to_json)
         self.micronuclei_counts = get_micronuclei_counts(path_to_json)
